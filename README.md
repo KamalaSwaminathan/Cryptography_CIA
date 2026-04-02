@@ -190,6 +190,8 @@ Possible values: 2⁶⁴ ≈ 18.4 quintillion
 A one-character change flips approximately half the output bits - the same property targeted by SHA-family hashes:
 (To evaluate strength of algorithm)
 
+<img width="509" height="425" alt="Avalanche test" src="https://github.com/user-attachments/assets/c2f59e4a-98c1-4d4e-b946-723dcb3169d6" />
+
 | Input A | Input B | Bits flipped (out of 64) |
 |---|---|---|
 | `ATTACK` | `ATTACC` | 29 |
