@@ -31,9 +31,9 @@ python test_roundtrip.py
 
 ## Part 1 — Spiral Route Cipher
 
-### Route Cipher?
+### Route Cipher
 
-A Route Cipher is a **transposition cipher** — characters are rearranged according to a geometric route through a grid rather than substituted. It is one of the oldest cipher families, used historically for military communication because the key is a single integer and the operation is easy to do by hand.
+A Route Cipher is a **transposition cipher** - characters are rearranged according to a geometric route through a grid rather than substituted. It is one of the oldest cipher families, used historically for military communication because the key is a single integer and the operation is easy to do by hand.
 
 ### Why Spiral?
 
@@ -41,13 +41,13 @@ A standard route cipher reads columns or rows - linear patterns that are predict
 
 ### How Encryption Works
 
-**Key:** a single integer — the number of columns in the grid. Both sender and receiver must agree on this.
+**Key:** a single integer - the number of columns in the grid. Both sender and receiver must agree on this.
 
 **Steps:**
 
 1. Uppercase the plaintext and remove spaces
 2. Write it into a grid of `num_cols` columns, left to right, top to bottom
-3. If the last row is not full, pad with `X` (classical dummy character for transposition ciphers — filling the row makes the grid a complete rectangle, which is required for the spiral to work correctly)
+3. If the last row is not full, pad with `X` (classical dummy character for transposition ciphers - filling the row makes the grid a complete rectangle, which is required for the spiral to work correctly)
 4. Read the grid back out in a **clockwise spiral** starting from the top-left corner
 5. That reading order is the ciphertext
 
@@ -111,7 +111,7 @@ Hash digest :  3C9B82DADA72A465
 
 ### Why This Hash?
 
-Vowels and consonants play structurally different roles in English. Vowels carry the rhythm and stress of a word; consonants carry its shape. A naive hash treats all characters identically — patterns in the input tend to produce patterns in the output.
+Vowels and consonants play structurally different roles in English. Vowels carry the rhythm and stress of a word; consonants carry its shape. A naive hash treats all characters identically - patterns in the input tend to produce patterns in the output.
 
 This hash separates them into **two independent accumulators** (lanes) that run in parallel and only combine at the very end via XOR:
 
@@ -127,11 +127,11 @@ This hash separates them into **two independent accumulators** (lanes) that run 
 
 | Constant | Value | Purpose |
 |---|---|---|
-| `MASK` | `0xFFFFFFFFFFFFFFFF` | 64-bit mask. Python integers grow unboundedly — AND-ing with this after every operation keeps all values within 64 bits |
-| `V_PRIME` | `1000000007` | Large prime for the vowel lane multiplier. Primes spread values uniformly — a composite multiplier causes periodic patterns in the accumulator |
+| `MASK` | `0xFFFFFFFFFFFFFFFF` | 64-bit mask. Python integers grow unboundedly - AND-ing with this after every operation keeps all values within 64 bits |
+| `V_PRIME` | `1000000007` | Large prime for the vowel lane multiplier. Primes spread values uniformly - a composite multiplier causes periodic patterns in the accumulator |
 | `C_PRIME` | `998244353` | Large prime for the consonant lane. Deliberately different from `V_PRIME` so the two lanes mix at different rates, reducing the chance they cancel each other at the XOR step |
 | `ROT_V` | `13` | Bit rotation amount for the vowel lane |
-| `ROT_C` | `17` | Bit rotation amount for the consonant lane — asymmetric to `ROT_V` so the two lanes' bit patterns don't align and interfere |
+| `ROT_C` | `17` | Bit rotation amount for the consonant lane - asymmetric to `ROT_V` so the two lanes' bit patterns don't align and interfere |
 | `VOWELS` | `{A, E, I, O, U}` | The five English vowels used to route each character to its lane |
 
 ### Variables
@@ -140,9 +140,9 @@ This hash separates them into **two independent accumulators** (lanes) that run 
 |---|---|
 | `i` | Index of the current character (0-based) |
 | `ch` | Current character (uppercased) |
-| `weight` | `(i + 1) * ord(ch)` — position-weighted ASCII value. The `+1` ensures index-0 characters contribute a non-zero weight. `ord(ch)` ties the contribution to which character it is, not just where |
-| `v_acc` | Vowel lane accumulator — 64-bit, updated only when `ch` is a vowel |
-| `c_acc` | Consonant lane accumulator — 64-bit, updated only when `ch` is a consonant |
+| `weight` | `(i + 1) * ord(ch)` - position-weighted ASCII value. The `+1` ensures index 0 characters contribute a non-zero weight. `ord(ch)` ties the contribution to which character it is, not just where |
+| `v_acc` | Vowel lane accumulator - 64-bit, updated only when `ch` is a vowel |
+| `c_acc` | Consonant lane accumulator - 64-bit, updated only when `ch` is a consonant |
 | `combined` | Final merged value before output |
 
 ### Algorithm — Step by Step
@@ -166,7 +166,7 @@ c_acc = (c_acc + weight × C_PRIME) & MASK
 ```
 
 **What rotate_left_64 does:**  
-A normal left shift discards the high bits that fall off the top. Rotation wraps them back to the low end — no information is lost, and every bit of the current state influences all future states.
+A normal left shift discards the high bits that fall off the top. Rotation wraps them back to the low end - no information is lost, and every bit of the current state influences all future states.
 
 ```
 8-bit example:
@@ -202,7 +202,7 @@ A one-character change flips approximately half the output bits - the same prope
 
 ---
 
-## Part 3 — Round-Trip Test Output
+## Part 3 - Round-Trip Test Output
 
 ```
 Example 1 — Short message
@@ -234,6 +234,6 @@ The hash is applied to the **ciphertext**, not the plaintext. This means it acts
 
 ## Limitations 
 
-- Both lanes start at zero. If the input contains no vowels (e.g. `BCDF`), the vowel lane stays at zero and the digest is effectively single-lane. For normal English text this does not occur. A non-zero starting seed for each lane would fix this edge case — it was intentionally left out to keep the design transparent and easy to follow.
+- Both lanes start at zero. If the input contains no vowels (e.g. `BCDF`), the vowel lane stays at zero and the digest is effectively single-lane. For normal English text this does not occur. Solution: A non-zero starting seed for each lane would fix this edge case.
 
 The Spiral Route Cipher is not secure by modern standards. It is a pure transposition cipher and is vulnerable to frequency analysis and known-plaintext attacks. This implementation is for educational purposes only. The Dual-Lane Vowel-Consonant Hash has not been formally analysed or peer-reviewed and should not replace SHA-256 or similar in any real application.
