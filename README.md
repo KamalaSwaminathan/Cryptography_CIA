@@ -29,7 +29,7 @@ python test_roundtrip.py
 
 ---
 
-## Part 1 — Spiral Route Cipher
+## Part 1 - Spiral Route Cipher
 
 ### Route Cipher
 
@@ -66,9 +66,9 @@ The two operations are exact inverses of each other.
 
 | Variable | Description |
 |---|---|
-| `num_cols` | Key — width of the grid |
+| `num_cols` | Key - width of the grid |
 | `num_rows` | Derived: `ceil(len(plaintext) / num_cols)` |
-| `PAD` | `'X'` — dummy character to complete the last row |
+| `PAD` | `'X'` - dummy character to complete the last row |
 | `grid` | 2D list of characters, filled row by row |
 | `top, bottom, left, right` | Boundary variables that shrink inward each spiral pass |
 
@@ -145,7 +145,7 @@ This hash separates them into **two independent accumulators** (lanes) that run 
 | `c_acc` | Consonant lane accumulator - 64-bit, updated only when `ch` is a consonant |
 | `combined` | Final merged value before output |
 
-### Algorithm — Step by Step
+### Algorithm 
 
 For each character `ch` at index `i` (letters only, spaces and symbols skipped):
 
